@@ -61,10 +61,28 @@ foreach (var project in solution.Projects)
         var root = await document.GetSyntaxRootAsync();
         var meths = root.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
 
-        foreach (var objc in meths)
+        foreach (var objc in meths.Skip(1))
         {
+            MethodDeclarationSyntax methodDeclarationSyntax = null;
+
+            for (var parent = objc.Parent; parent != null; parent = parent.Parent)
+            {
+                if (parent is MethodDeclarationSyntax)
+                {
+                    methodDeclarationSyntax = (MethodDeclarationSyntax) parent;
+                    break;
+                }
+            }
+
+            if (methodDeclarationSyntax != null)
+            {
+                //methodDeclarationSyntax.Identifier
+                var declaredSymbol = model.GetDeclaredSymbol(methodDeclarationSyntax);
+                int j = 78;
+            }
+
             var semanticType = model.GetTypeInfo(objc);
-            ISymbol? declaredType = model.GetDeclaredSymbol(objc);
+            // ISymbol? declaredType = model.GetDeclaredSymbol(objc);
             int i = 4;
         }
 
